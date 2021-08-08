@@ -1,66 +1,52 @@
 "use strict";
-class MyArray {
-  constructor(...argument) {
-    this.length = 0;
-    this.push(...argument);
-  }
-  static isMyArray(arg) {
-    if (arg instanceof MyArray) {
-      return true;
+class RangeValidator {
+    constructor(from, to) {
+        if(isNaN(from) || typeof from !== "number") {
+            throw TypeError("from must be a number")
+        }
+        if(isNaN(to) || typeof to !== "number") {
+            throw TypeError("to must be a number")
+        }
+        if (from > to) {
+            throw RangeError("from must be less than to")
+        }
+        if (to < from) {
+            throw RangeError("to must be more than from")
+        }
+        this._from = from
+        this._to = to
     }
-    return false;
-  }
-  push(...rest) {
-    for (let i = 0; i < rest.length; i++) {
-      this[this.length++] = rest[i];
+    get from() {
+        return this._from
     }
-  }
-  pop() {
-    const deleted = this[this.length - 1];
-    delete this[this.length - 1];
-    if (this.length > 0) {
-      this.length--;
+    set from(value) {
+        this._from = value
     }
-    return deleted;
-  }
-  forEach(func) {
-    for (let i = 0; i < this.length; i++) {
-      func(this[i], i, this);
+    get to() {
+        return this._to
     }
-  }
-  map(func) {
-    let result = []
-    for (let i = 0; i < this.length; i++) {
-      result[i] = func(this[i], i, this);
+    set to(value) {
+        this._to = value
     }
-    return result
-  }
-  unshift(...rest) {
-    for (let i = 0 ; i < rest.length ; i++) {
-      this[i + rest.length] = this[i];
-      this[this.length++] = rest[i];
+    getterRange () {
+        let range = []
+        for (let i = this._from ; i <= this._to ; i++) {
+            range.push(i)
+        }
+        return range
     }
-    return this.length
-  }
-  shift() {
-    const deleted = this[this.length - 1]
-    // for (let i = 0 ; i < this.length ; i++) {
-    //   for (let j = 0 ; j < this.length ; j++) {
-    //     this[j] = this[i]
-    //   } 
-    // }
-    for (let i = 0 ; i < this.length ; i++) {
-      this[i] = this[i++]
+    validate (number) {
+        let range = this.getterRange()
+        for (let i = 0 ; i <= range.length ; i++) {
+            if (number === range[i]) {
+                return number
+            }
+            if (number !== range[i] && range[i] === this[this._to] ) {
+                throw RangeError("number is not in range")
+            }
+        }
     }
-    delete this[this.length - 1];    
-    if (this.length > 0) {
-      this.length--;
-    }
-    return deleted;
-  }
 }
-
-const array1 = new MyArray(15, 20, 40);
-
-// array1.mar(value => console.log(value))
+    
+const range1 = new RangeValidator(5, 25)
 
