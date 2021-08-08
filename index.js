@@ -48,5 +48,5 @@ class RangeValidator {
     }
 }
     
-const range1 = new RangeValidator(5, 25)
+const myRange1 = new RangeValidator(5, 25)
 
